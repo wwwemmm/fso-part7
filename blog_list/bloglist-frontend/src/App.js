@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import Notification from './components/Notification'
 import './index.css'
 import LoginForm from './components/LoginForm'
@@ -14,9 +13,6 @@ import { setUser } from './reducers/userReducer'
 const App = () => {
   const dispatch = useDispatch()
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  //const [user, setUser] = useState(null)
   const blogFormRef = useRef()
   const user = useSelector(state => state.userData.user)
 
@@ -34,28 +30,6 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
-  /*
-  const handleLogin = async  (event) => {
-    event.preventDefault()
-    console.log('logging in with', username, password)
-    try {
-      const user = await loginService.login({
-        username, password,
-      })
-
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      dispatch(setNotification('Wrong username or password', 5, 'error'))
-    }
-  }
-  */
 
   const addBlog = async  (blogObject) => {
     console.log('adding blog ',blogObject.title, blogObject.author)
@@ -82,7 +56,8 @@ const App = () => {
   )
 
   const handleLogout = () => {
-    setUser(null)
+    dispatch(setUser(null))
+    console.log('logout: ', user)
     window.localStorage.removeItem('loggedBlogappUser')
   }
 
