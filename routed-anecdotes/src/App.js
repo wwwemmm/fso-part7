@@ -113,7 +113,7 @@ const CreateNew = (props) => {
 }
 
 const App = () => {
-  const anecdotes = useList([
+  const intialAnecdotes = [
     {
       content: 'If it hurts, do it more often',
       author: 'Jez Humble',
@@ -128,20 +128,21 @@ const App = () => {
       votes: 0,
       id: 2
     }
-  ])
-  const notification = useField('text')
+  ]
+  const [anecdotes, setAnecdotes] = useState(intialAnecdotes)
+  const [notification, setNotification] = useState('')
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
-    anecdotes.setChange(anecdotes.values.concat(anecdote))
-    notification.setChange(`a new anecdote ${anecdote.content} created!`)
+    setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new anecdote ${anecdote.content} created!`)
     setTimeout(() =>
-    notification.setChange(``)
+    setNotification(``)
     ,5000)
   }
 
   const anecdoteById = (id) =>
-    anecdotes.values.find(a => a.id === id)
+    anecdotes.find(a => a.id === id)
 
   const vote = (id) => {
     const anecdote = anecdoteById(id)
@@ -151,7 +152,7 @@ const App = () => {
       votes: anecdote.votes + 1
     }
 
-    anecdotes.setChange(anecdotes.values.map(a => a.id === id ? voted : a))
+    setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
   const match = useMatch('/anecdotes/:id')
@@ -163,13 +164,13 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
-      {notification.value===''?
+      {notification ===''?
       null:
-      <div>{notification.value}</div>}
+      <div>{notification}</div>}
       <Routes>
         <Route path="/anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
-        <Route path="/" element={<AnecdoteList anecdotes={anecdotes.values} />} />
-        <Route path="/anecdotes" element={<AnecdoteList anecdotes={anecdotes.values} />} />
+        <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route path="/anecdotes" element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path="/createnew" element={<CreateNew addNew={addNew} />} />
         <Route path="/about" element={<About />} />
       </Routes>

@@ -8,10 +8,6 @@ export const useField = (type) => {
     setValue(event.target.value)
   }
 
-  const setChange = (value) => {
-    setValue(value)
-  }
-
   const reset = () => {
     setValue('')
   }
@@ -20,20 +16,6 @@ export const useField = (type) => {
     type,
     value,
     onChange,
-    setChange,
     reset
   }
-}
-
-// modules can have several named exports
-
-export const useList = (initialValue=[]) => {
-    const [values, setValues] = useState(initialValue)
-    const setChange = (values) => {
-        setValues(values)
-    }
-    return {
-        values,
-        setChange
-      }
 }
