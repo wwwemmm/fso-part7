@@ -43,7 +43,6 @@ const useResource = (baseUrl) => {
     setResources(resources.filter(note => note.id !==response.data.id).concat(response.data))
   }
 
-  getAll()
   return [
     resources, {setToken, getAll, create, update}
   ]
@@ -58,6 +57,10 @@ const App = () => {
   const [persons, personService] = useResource('http://localhost:3005/persons')
   //noteService.getAll()
   //personService.getAll()
+  useEffect(() => {
+    noteService.getAll()
+    personService.getAll()
+  },[])
 
   const handleNoteSubmit = (event) => {
     event.preventDefault()
