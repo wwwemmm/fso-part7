@@ -9,14 +9,16 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import { setNotification } from './reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
+import { setUser } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  //const [user, setUser] = useState(null)
   const blogFormRef = useRef()
+  const user = useSelector(state => state.userData.user)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -33,7 +35,7 @@ const App = () => {
     }
   }, [])
 
-
+  /*
   const handleLogin = async  (event) => {
     event.preventDefault()
     console.log('logging in with', username, password)
@@ -53,6 +55,7 @@ const App = () => {
       dispatch(setNotification('Wrong username or password', 5, 'error'))
     }
   }
+  */
 
   const addBlog = async  (blogObject) => {
     console.log('adding blog ',blogObject.title, blogObject.author)
@@ -71,19 +74,6 @@ const App = () => {
       dispatch(setNotification('Missing title, author or url', 5, 'error'))
     }
   }
-
-  const loginForm = () => {
-    return (
-      <Togglable buttonLabel='login'>
-        <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          handleSubmit={handleLogin}
-        />
-      </Togglable>
-    )}
 
   const blogForm = () => (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
@@ -128,11 +118,14 @@ const App = () => {
       dispatch(setNotification(`fail to delete ${blog.title}`, 5, 'error'))
     }}
 
+  console.log('user in app: ', user)
+  console.log('user === null', user===null)
+  console.log('type of user: ', typeof(user))
 
   return (
     <div>
       {user === null && <Notification />}
-      {user === null && loginForm()}
+      {user === null && <LoginForm />}
       {user &&
       <div>
         <h2>blogs</h2>
