@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import usersService from '../services/users'
-
+import { useSelector } from 'react-redux'
 
 const usersSlice = createSlice({
   name: 'users',
@@ -13,10 +13,21 @@ const usersSlice = createSlice({
       )
       return updatedState.sort((a, b) => b.likes - a.likes)
     },
-    appendBlog(state, action) {
-      console.log('appendBlog is running...')
-      state.push(action.payload)
+
+    appendBlogInUser(state, action) {
+      console.log('appendBlogInUser: ', action.payload)
+      const user = action.payload.user
+      const newBlog = action.payload.blog
+
+      return (
+        state.map(u => (
+          u.id === user.id?
+            { ...u, blogs: u.blogs.concat(newBlog) }
+            : u
+        ))
+      )
     },
+
     setUsers(state, action) {
       return action.payload
     },
@@ -35,7 +46,7 @@ const usersSlice = createSlice({
   },
 })
 
-export const { updateBlog, appendBlog, setUsers, deleteBlogInUser } = usersSlice.actions
+export const { updateBlog, appendBlogInUser, setUsers, deleteBlogInUser } = usersSlice.actions
 export default usersSlice.reducer
 
 export const initializeUsers = () => {
