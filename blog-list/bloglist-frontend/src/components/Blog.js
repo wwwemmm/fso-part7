@@ -20,10 +20,10 @@ const Blog = ({ blog }) => {
     console.log('adding likes',blog.title, blog.author)
     try {
       await dispatch(increadLike(blog))
-      dispatch(setNotification(`Likes of ${blog.title} are increased`, 5, 'fulfilled'))
+      dispatch(setNotification(`Likes of ${blog.title} are increased`, 5, 'success'))
     }
     catch (exception) {
-      dispatch(setNotification('fail to increase likes', 5, 'error'))
+      dispatch(setNotification('fail to increase likes', 5, 'danger'))
     }}
 
 
@@ -32,10 +32,10 @@ const Blog = ({ blog }) => {
       console.log('deleting blog',blog.title, blog.author)
       try {
         await dispatch(removeBlog(blog))
-        dispatch(setNotification(`${blog.title} is deleted`, 5, 'fulfilled'))
+        dispatch(setNotification(`${blog.title} is deleted`, 5, 'success'))
       }catch (exception) {
         console.log('exception: ', exception)
-        dispatch(setNotification(`fail to delete ${blog.title}`, 5, 'error'))
+        dispatch(setNotification(`fail to delete ${blog.title}`, 5, 'danger'))
       }
     }
   }

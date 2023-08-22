@@ -40,7 +40,7 @@ export const login = (username, password) => {
       dispatch(setUsername(''))
       dispatch(setPassword(''))
     } catch (exception) {
-      dispatch(setNotification('Wrong username or password', 5, 'error'))
+      dispatch(setNotification('Wrong username or password', 5, 'danger'))
     }
   }
 }

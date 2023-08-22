@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { login, setPassword, setUsername } from '../reducers/userReducer'
-import { useSelector } from 'react-redux'
+import { Table, Form, Button } from 'react-bootstrap'
 import Togglable from './Togglable'
 
 const LoginForm = ({ pros }) => {
@@ -18,26 +18,27 @@ const LoginForm = ({ pros }) => {
     <Togglable buttonLabel='login'>
       <div>
         <h2>Login</h2>
-
-        <form onSubmit={handleLogin}>
-          <div>
-          username
-            <input
-              id='username'
-              name='username'
+        <Form onSubmit={handleLogin}>
+          <Form.Group>
+            <Form.Label>username:</Form.Label>
+            <Form.Control
+              type="text"
+              name="username"
+              id = 'usename'
             />
-          </div>
-          <div>
-          password
-            <input
+            <Form.Label>password:</Form.Label>
+            <Form.Control
               type="password"
-              id='password'
-              name='password'
+              name="password"
+              id = 'password'
             />
-          </div>
-          <button id="login-button" type="submit" >login</button>
-        </form>
+            <Button variant="primary" type="submit" id="login-button">
+            login
+            </Button>
+          </Form.Group>
+        </Form>
       </div>
+      <br></br>
     </Togglable>
   )
 }

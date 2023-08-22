@@ -17,19 +17,24 @@ import {
 import { setNotification } from './reducers/notificationReducer'
 import { removeBlog, increadLike } from './reducers/blogReducer'
 import { setComment, createComment } from './reducers/commentReducer'
-
-//
+import { Table, Form, Button } from 'react-bootstrap'
 
 const BlogsPage = () => {
   const blogs = useSelector(state => state.blogs)
   return (
     <div>
       <BlogForm />
-      {blogs.map(blog =>
-        <li key={blog.id} >
-          <Link to={`/blogs/${blog.id}`}>{blog.title}  </Link>
-        </li>
-      )}
+      <Table striped>
+        <tbody>
+          {blogs.map(blog =>
+            <tr key={blog.id} >
+              <td>
+                <Link to={`/blogs/${blog.id}`}>{blog.title}  </Link>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
     </div>
   )
 }
@@ -39,13 +44,24 @@ const UsersList = () => {
   return (
     <div>
       <h2>Users</h2>
-      <ul>
-        {users.map(user =>
-          <li key={user.id} >
-            <Link to={`/users/${user.id}`}>{user.name}  </Link>
-            <span>{user.blogs.length}</span>
-          </li>)}
-      </ul>
+      <Table striped>
+        <thead>
+          <tr>
+            <th></th>
+            <th>blogs created</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map(user =>
+            <tr key={user.id} >
+              <td>
+                <Link to={`/users/${user.id}`}>{user.name}  </Link>
+              </td>
+
+              <td>{user.blogs.length}</td>
+            </tr>)}
+        </tbody>
+      </Table>
     </div>
   )
 }
@@ -58,9 +74,15 @@ const UserDetail = ({ user }) => {
     <div>
       <h2>{user.name}</h2>
       <h3>added blogs</h3>
-      {user.blogs.map(blog =>
-        <li key = {blog.id}>{blog.title}</li>
-      )}
+      <Table striped>
+        <tbody>
+          {user.blogs.map(blog =>
+            <tr key = {blog.id}>
+              <td>{blog.title}</td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
     </div>
   )
 }
@@ -78,8 +100,9 @@ const BlogDetail = ({ blog, handleIncreaseLike, handleDelete }) => {
     try{
       console.log('handleCreateComment content: ', content)
       await dispatch(createComment(blog, content))
+      dispatch(setNotification(`Comment ${content} is added`, 5, 'success'))
     } catch(exception) {
-      console.log(exception)
+      dispatch(setNotification('Fail to add comment', 5, 'danger'))
     }
   }
   const showWhenIsCreator = blog.user.id.toString()===loginUser.id.toString() ? true : false
@@ -90,20 +113,33 @@ const BlogDetail = ({ blog, handleIncreaseLike, handleDelete }) => {
       <a href='{blog.url}'>{blog.url}</a>
       <p>
         <span>{blog.likes} likes </span>
-        <button onClick={handleIncreaseLike}>like</button>
+        <Button onClick={handleIncreaseLike} size="sm">like</Button>
       </p>
       <p>
         <span>added by {blog.user.name} </span>
         {showWhenIsCreator && <button onClick={handleDelete}>remove the blog</button>}
       </p>
       <h3>comments</h3>
-      <form onSubmit={handleCreateComment}>
-        <input value={content} onChange={(e) => {dispatch(setComment(e.target.value))}}></input>
-        <button>add comment</button>
-      </form>
-      {blog.comments.map(comment =>
-        <li key={comment.id}>{comment.content}</li>
-      )}
+      <Form onSubmit={handleCreateComment}>
+        <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
+          <Form.Control
+            type="text"
+            value={content}
+            onChange={(e) => {dispatch(setComment(e.target.value))}}
+            style={{ marginRight: '10px' }}
+          />
+          <Button variant="primary" type="submit">add comment</Button>
+        </Form.Group>
+      </Form>
+      <Table striped>
+        <tbody>
+          {blog.comments.map(comment =>
+            <tr key={comment.id}>
+              <td>{comment.content}</td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
     </div>
   )
 }
@@ -138,10 +174,10 @@ const App = () => {
     console.log('adding likes',blog.title, blog.author)
     try {
       await dispatch(increadLike(blog))
-      dispatch(setNotification(`Likes of ${blog.title} are increased`, 5, 'fulfilled'))
+      dispatch(setNotification(`Likes of ${blog.title} are increased`, 5, 'success'))
     }
     catch (exception) {
-      dispatch(setNotification('fail to increase likes', 5, 'error'))
+      dispatch(setNotification('fail to increase likes', 5, 'danger'))
     }}
 
   const handleDelete = async () => {
@@ -149,10 +185,10 @@ const App = () => {
       console.log('deleting blog',blog.title, blog.author)
       try {
         await dispatch(removeBlog(blog))
-        dispatch(setNotification(`${blog.title} is deleted`, 5, 'fulfilled'))
+        dispatch(setNotification(`${blog.title} is deleted`, 5, 'success'))
       }catch (exception) {
         console.log('exception: ', exception)
-        dispatch(setNotification(`fail to delete ${blog.title}`, 5, 'error'))
+        dispatch(setNotification(`fail to delete ${blog.title}`, 5, 'danger'))
       }
     }
   }
@@ -170,7 +206,7 @@ const App = () => {
     : null
 
   return (
-    <div>
+    <div className="container">
       {loginUser === null && <Notification />}
       {loginUser === null && <LoginForm />}
       {loginUser &&
