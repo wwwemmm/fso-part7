@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
-import { removeBlog } from '../reducers/blogReducer'
+import { removeBlog, increadLike } from '../reducers/blogReducer'
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog }) => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.userData.user)
   const [showDetail, setShowDetail] = useState(false)
-
+  console.log('blog: ', blog)
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -16,7 +16,8 @@ const Blog = ({ blog, updateBlog }) => {
     marginBottom: 5
   }
 
-  const increaseLike = async () => {
+  const handleIncreaseLike = async () => {
+    /*
     const newBlog = {
       'user':blog.user.id,
       'likes': blog.likes + 1,
@@ -25,7 +26,16 @@ const Blog = ({ blog, updateBlog }) => {
       'url':blog.url
     }
     await updateBlog(blog.id, newBlog)
-  }
+    */
+    console.log('adding likes',blog.title, blog.author)
+    try {
+      await dispatch(increadLike(blog))
+      dispatch(setNotification(`Likes of ${blog.title} are increased`, 5, 'fulfilled'))
+    }
+    catch (exception) {
+      dispatch(setNotification('fail to increase likes', 5, 'error'))
+    }}
+
 
   const handleDelete = async () => {
     if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
@@ -39,8 +49,8 @@ const Blog = ({ blog, updateBlog }) => {
       }
     }
   }
-
-  console.log('blog.user.id:', blog.user.id)
+  console.log('blog: ', blog)
+  console.log('blog.author:', blog.author)
   console.log('user.id', user.id)
 
   const showWhenIsCreator = { display: blog.user.id.toString()===user.id.toString() ? '' : 'none' }
@@ -59,7 +69,7 @@ const Blog = ({ blog, updateBlog }) => {
       <p>{blog.url}</p>
       <p>
         <span>likes {blog.likes}</span>
-        <button onClick = {increaseLike} className='like'>like</button>
+        <button onClick = {handleIncreaseLike} className='like'>like</button>
       </p>
       <p>
         <span>{blog.user.name}</span>

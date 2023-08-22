@@ -30,7 +30,7 @@ const blogSlice = createSlice({
   },
 })
 
-export const { updateBlog, appendBlog, setBlogs, deleteBlog} = blogSlice.actions
+export const { updateBlog, appendBlog, setBlogs, deleteBlog } = blogSlice.actions
 export default blogSlice.reducer
 
 export const initializeBlogs = () => {
@@ -63,9 +63,15 @@ export const increadLike= blog => {
   return async dispatch => {
     const changedBlog = {
       ...blog,
-      likes:blog.likes + 1
+      likes:blog.likes + 1,
+      user: blog.user.id
     }
-    const newBlog = await blogService.update(changedBlog)
-    dispatch(updateBlog(newBlog))
+    const returnedBlog = await blogService.update(blog.id, changedBlog)
+
+    const succeedUpdateBlog = {
+      ...returnedBlog,
+      user:blog.user
+    }
+    dispatch(updateBlog(succeedUpdateBlog))
   }
 }

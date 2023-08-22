@@ -35,7 +35,7 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
   }
 
-
+  /*
   const updateBlog = async (blogid, blogObject) => {
     console.log('adding likes',blogObject.title, blogObject.author)
     try {
@@ -52,20 +52,6 @@ const App = () => {
       dispatch(setNotification(`Likes of ${blogObject.title} are increased`, 5, 'fulfilled'))
     } catch (exception) {
       dispatch(setNotification('fail to increase likes', 5, 'error'))
-    }}
-
-  /*
-  const deleteBlog = async (blog) => {
-    console.log('deleting blog',blog.title, blog.author)
-    try {
-      await blogService.deleteBlog(blog.id)
-      const newBlogs = blogs.filter(b => b.id !== blog.id)
-      const sortedBlog = await newBlogs.sort((a, b) => b.likes - a.likes)
-      setBlogs(sortedBlog)
-
-      dispatch(setNotification(`${blog.title} is deleted`, 5, 'fulfilled'))
-    } catch (exception) {
-      dispatch(setNotification(`fail to delete ${blog.title}`, 5, 'error'))
     }}
     */
 
@@ -84,7 +70,7 @@ const App = () => {
         <BlogForm />
 
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+          <Blog key={blog.id} blog={blog} />
         )}
       </div>
       }
