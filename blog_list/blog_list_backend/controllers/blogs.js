@@ -4,7 +4,7 @@ const middleware = require('../utils/middleware')
 blogsRouter.get('/', async (request, response) => {
   //The functionality of the populate method of Mongoose is based on the fact that
   //we have defined "types" to the references in the Mongoose schema with the ref option:
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 }).populate('comments', { content:1})
   response.json(blogs)
 })
 

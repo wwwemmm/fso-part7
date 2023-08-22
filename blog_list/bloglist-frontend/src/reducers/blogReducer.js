@@ -50,7 +50,6 @@ export const createBlog = blog => {
       user: blog.user
     }))
     dispatch(appendBlogInUser({ user:blog.user, blog:newBlog }))
-    //await dispatch(initializeUsers())
   }
 }
 

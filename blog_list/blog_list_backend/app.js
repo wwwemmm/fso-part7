@@ -8,6 +8,8 @@ const cors = require('cors')
 const usersRouter = require('./controllers/users')
 const blogsRouter = require('./controllers/blogs')
 const loginRouter = require('./controllers/login')
+const commentsRouter = require('./controllers/comments')
+
 const middleware = require('./utils/middleware')
 const morgan = require('morgan')
 const logger = require('./utils/logger')
@@ -32,12 +34,14 @@ app.use(middleware.tokenExtractor)
 app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/blogs', blogsRouter)
+app.use('/api/comments', commentsRouter)
+
 if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controllers/testing')
   app.use('/api/testing', testingRouter)
 }
 
-app.use(middleware.unknownEndpoint)
+//app.use(middleware.unknownEndpoint)
 // this has to be the last loaded middleware.
 app.use(middleware.errorHandler)
 

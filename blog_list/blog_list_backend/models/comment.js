@@ -1,30 +1,16 @@
 const mongoose = require('mongoose')
-const blogSchema = new mongoose.Schema({
-  title: {
+const commentSchema = new mongoose.Schema({
+  content: {
     type:String,
-    //minLength:1,
     required:true
   },
-  author: String,
-  url: {
-    type:String,
-    //minLength:1,
-    required:true
-  },
-  likes: Number,
-  user: {
+  blog: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  comments: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment'
-    }
-  ],
+    ref: 'Blog'
+  }
 })
 
-blogSchema.set('toJSON', {
+commentSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     // Even though the _id property of Mongoose objects looks like a string, it is in fact an object.
     returnedObject.id = returnedObject._id.toString()
@@ -34,4 +20,4 @@ blogSchema.set('toJSON', {
 })
 
 //If you define a model with the name Person, mongoose will automatically name the associated collection as people.
-module.exports = mongoose.model('Blog', blogSchema)
+module.exports = mongoose.model('Comment', commentSchema)

@@ -6,12 +6,16 @@ const usersSlice = createSlice({
   name: 'users',
   initialState: [],
   reducers: {
-    updateBlog(state, action) {
+    updateBlogInUser(state, action) {
+      console.log(action.payload)
       const toUpdateBlog = action.payload
-      let updatedState =  state.map(blog =>
-        blog.id !== toUpdateBlog.id ? blog : toUpdateBlog
+      console.log('toUpdateBlog.user.id', toUpdateBlog.user.id)
+      const afterUpdateBlogs = state.map(u =>
+        u.id === toUpdateBlog.user.id?
+          { ...u, blogs: u.blogs.filter(b => b.id !== toUpdateBlog.id).concat(toUpdateBlog) }
+          : u
       )
-      return updatedState.sort((a, b) => b.likes - a.likes)
+      return afterUpdateBlogs.sort((a, b) => b.blogs.length - a.blogs.length)
     },
 
     appendBlogInUser(state, action) {
