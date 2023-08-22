@@ -21,16 +21,21 @@ const usersSlice = createSlice({
       return action.payload
     },
 
-    deleteBlog(state, action) {
-      console.log('blogReducer_deleteBlogs is running...')
+    deleteBlogInUser(state, action) {
+      console.log(action.payload)
       const toDeleteBlog = action.payload
-      const afterDeleteBlogs = state.filter(b => b.id !== toDeleteBlog.id)
-      return afterDeleteBlogs.sort((a, b) => b.likes - a.likes)
+      const afterDeleteBlogs = state.map(u =>
+        ({
+          ...u,
+          blogs : u.blogs.filter(b => b.id !== toDeleteBlog.id)
+        })
+      )
+      return afterDeleteBlogs.sort((a, b) => b.blogs.length - a.blogs.length)
     }
   },
 })
 
-export const { updateBlog, appendBlog, setUsers, deleteBlog } = usersSlice.actions
+export const { updateBlog, appendBlog, setUsers, deleteBlogInUser } = usersSlice.actions
 export default usersSlice.reducer
 
 export const initializeUsers = () => {
