@@ -1,9 +1,8 @@
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import Togglable from './Togglable'
 import { createBlog } from '../reducers/blogReducer'
-import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 const BlogForm = () => {
   const dispatch = useDispatch()

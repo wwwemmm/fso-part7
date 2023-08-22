@@ -1,6 +1,11 @@
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setNotification } from '../reducers/notificationReducer'
+import { removeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, updateBlog, deleteBlog , user }) => {
+const Blog = ({ blog, updateBlog }) => {
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.userData.user)
   const [showDetail, setShowDetail] = useState(false)
 
   const blogStyle = {
@@ -24,7 +29,14 @@ const Blog = ({ blog, updateBlog, deleteBlog , user }) => {
 
   const handleDelete = async () => {
     if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
-      deleteBlog(blog)
+      console.log('deleting blog',blog.title, blog.author)
+      try {
+        await dispatch(removeBlog(blog))
+        dispatch(setNotification(`${blog.title} is deleted`, 5, 'fulfilled'))
+      }catch (exception) {
+        console.log('exception: ', exception)
+        dispatch(setNotification(`fail to delete ${blog.title}`, 5, 'error'))
+      }
     }
   }
 

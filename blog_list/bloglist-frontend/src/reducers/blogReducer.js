@@ -20,10 +20,17 @@ const blogSlice = createSlice({
     setBlogs(state, action) {
       return action.payload
     },
+
+    deleteBlog(state, action) {
+      console.log('blogReducer_deleteBlogs is running...')
+      const toDeleteBlog = action.payload
+      const afterDeleteBlogs = state.filter(b => b.id !== toDeleteBlog.id)
+      return afterDeleteBlogs.sort((a, b) => b.likes - a.likes)
+    }
   },
 })
 
-export const { updateBlog, appendBlog, setBlogs } = blogSlice.actions
+export const { updateBlog, appendBlog, setBlogs, deleteBlog} = blogSlice.actions
 export default blogSlice.reducer
 
 export const initializeBlogs = () => {
@@ -41,6 +48,14 @@ export const createBlog = blog => {
       ...newBlog,
       user: blog.user
     }))
+  }
+}
+
+export const removeBlog = blog => {
+  return async dispatch => {
+    console.log('blog in removeBlog: ', blog)
+    await  blogService.deleteBlog(blog.id)
+    dispatch(deleteBlog(blog))
   }
 }
 
