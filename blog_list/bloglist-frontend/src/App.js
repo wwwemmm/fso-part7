@@ -89,7 +89,7 @@ const App = () => {
 
   const match = useMatch('/users/:id')
   console.log('match: ', match)
-  console.log('users ', users[0].id)
+
   const user = match
     ? users.find(u => u.id.toString() === match.params.id.toString())
     : null
