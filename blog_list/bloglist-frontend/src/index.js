@@ -9,6 +9,7 @@ import userReducer from './reducers/userReducer'
 import blogReducer from './reducers/blogReducer'
 import createBlogReducer from './reducers/createBlogReducer'
 import usersReducer from './reducers/usersReducer'
+import commentReducer from './reducers/commentReducer'
 
 import {
   BrowserRouter as Router
@@ -20,7 +21,8 @@ const store = configureStore({
     userData: userReducer,
     blogs: blogReducer,
     createBlog:createBlogReducer,
-    users:usersReducer
+    users:usersReducer,
+    comment:commentReducer
   }
 })
 

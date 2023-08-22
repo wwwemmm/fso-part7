@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import Notification from './components/Notification'
@@ -16,6 +16,7 @@ import {
 } from 'react-router-dom'
 import { setNotification } from './reducers/notificationReducer'
 import { removeBlog, increadLike } from './reducers/blogReducer'
+import { setComment, createComment } from './reducers/commentReducer'
 
 //
 
@@ -67,8 +68,19 @@ const UserDetail = ({ user }) => {
 
 const BlogDetail = ({ blog, handleIncreaseLike, handleDelete }) => {
   const loginUser = useSelector(state => state.userData.user)
+  const content = useSelector(state => state.comment)
+  const dispatch = useDispatch()
   if (!blog) {
     return null
+  }
+  const handleCreateComment = async (event) => {
+    event.preventDefault()
+    try{
+      console.log('handleCreateComment content: ', content)
+      await dispatch(createComment(blog, content))
+    } catch(exception) {
+      console.log(exception)
+    }
   }
   const showWhenIsCreator = blog.user.id.toString()===loginUser.id.toString() ? true : false
   console.log('showWhenIsCreator ', showWhenIsCreator)
@@ -84,6 +96,14 @@ const BlogDetail = ({ blog, handleIncreaseLike, handleDelete }) => {
         <span>added by {blog.user.name} </span>
         {showWhenIsCreator && <button onClick={handleDelete}>remove the blog</button>}
       </p>
+      <h3>comments</h3>
+      <form onSubmit={handleCreateComment}>
+        <input value={content} onChange={(e) => {dispatch(setComment(e.target.value))}}></input>
+        <button>add comment</button>
+      </form>
+      {blog.comments.map(comment =>
+        <li key={comment.id}>{comment.content}</li>
+      )}
     </div>
   )
 }
