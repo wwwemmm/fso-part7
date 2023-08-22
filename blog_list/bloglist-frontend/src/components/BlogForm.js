@@ -1,47 +1,62 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import Togglable from './Togglable'
+import { createBlog } from '../reducers/blogReducer'
+import { useDispatch } from 'react-redux'
+import { setNotification } from '../reducers/notificationReducer'
+import { useSelector } from 'react-redux'
 
-const BlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+const BlogForm = () => {
+  const dispatch = useDispatch()
+  const blogFormRef = useRef()
+  const user = useSelector(state => state.userData.user)
 
   const addBlog = async  (event) => {
     event.preventDefault()
+    const title = event.target.title.value
+    const author = event.target.author.value
+    const url = event.target.url.value
     console.log('adding a new blog', title, author)
-    await createBlog(
-      {
-        'title':title,
-        'author':author,
-        'url':url
-      })
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
+
+    try {
+      await dispatch(createBlog(
+        {
+          title,
+          author,
+          url,
+          user
+        }))
+      dispatch(setNotification(`a new blog ${title} by ${author} added`, 5, 'fulfilled'))
+      blogFormRef.current.toggleVisibility()
+    } catch (exception) {
+      console.log('exception',exception)
+      dispatch(setNotification('Missing title, author or url', 5, 'error'))
+    }}
+
 
   return (
-    <form onSubmit={addBlog}>
-      <div>title:
-        <input value={title}
-          onChange={({ target }) => setTitle(target.value)}
-          placeholder='write blog title here'
-        />
-      </div>
-      <div>author:
-        <input value={author}
-          onChange={({ target }) => setAuthor(target.value)}
-          placeholder='write blog author here'
-        />
-      </div>
-      <div>url:
-        <input
-          value={url}
-          onChange={({ target }) => setUrl(target.value)}
-          placeholder='write blog url here'
-        />
-      </div>
-      <button id="summit-blog-button" type="submit">create</button>
-    </form>
+    <Togglable buttonLabel='new blog' ref={blogFormRef}>
+      <form onSubmit={addBlog}>
+        <div>title:
+          <input
+            name= 'title'
+            placeholder='write blog title here'
+          />
+        </div>
+        <div>author:
+          <input
+            name = 'author'
+            placeholder='write blog author here'
+          />
+        </div>
+        <div>url:
+          <input
+            name = 'url'
+            placeholder='write blog url here'
+          />
+        </div>
+        <button id="summit-blog-button" type="submit">create</button>
+      </form>
+    </Togglable>
   )}
 
 export default BlogForm

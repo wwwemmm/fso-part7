@@ -4,23 +4,23 @@ import blogService from './services/blogs'
 import Notification from './components/Notification'
 import './index.css'
 import LoginForm from './components/LoginForm'
-import Togglable from './components/Togglable'
-import BlogForm from './components/BlogForm'
 import { setNotification } from './reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import { setUser } from './reducers/userReducer'
+import BlogForm from './components/BlogForm'
+import { initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
   const dispatch = useDispatch()
-  const [blogs, setBlogs] = useState([])
+  //const [blogs, setBlogs] = useState([])
   const blogFormRef = useRef()
   const user = useSelector(state => state.userData.user)
+  const blogs = useSelector(state => state.blogs)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
-    )
+    dispatch(initializeBlogs())
   }, [])
+  console.log('initializeBlogs: ', blogs)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -31,6 +31,7 @@ const App = () => {
     }
   }, [])
 
+  /*
   const addBlog = async  (blogObject) => {
     console.log('adding blog ',blogObject.title, blogObject.author)
     try {
@@ -48,12 +49,12 @@ const App = () => {
       dispatch(setNotification('Missing title, author or url', 5, 'error'))
     }
   }
-
   const blogForm = () => (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
       <BlogForm createBlog={addBlog} />
     </Togglable>
   )
+   */
 
   const handleLogout = () => {
     dispatch(setUser(null))
@@ -109,7 +110,7 @@ const App = () => {
           <span>{user.name} logged in</span>
           <button onClick = {handleLogout} >logout</button>
         </p>
-        {blogForm()}
+        <BlogForm />
 
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} user={user}/>
