@@ -14,6 +14,9 @@ import {
   Routes, Route, Link,
   useMatch, useNavigate
 } from 'react-router-dom'
+import { setNotification } from './reducers/notificationReducer'
+import { removeBlog, increadLike } from './reducers/blogReducer'
+
 //
 
 const BlogsPage = () => {
@@ -22,7 +25,9 @@ const BlogsPage = () => {
     <div>
       <BlogForm />
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <li key={blog.id} >
+          <Link to={`/blogs/${blog.id}`}>{blog.title}  </Link>
+        </li>
       )}
     </div>
   )
@@ -60,6 +65,23 @@ const UserDetail = ({ user }) => {
 }
 
 
+const BlogDetail = ({ blog, handleIncreaseLike }) => {
+  if (!blog) {
+    return null
+  }
+  return (
+    <div>
+      <h2>{blog.title} {blog.author}</h2>
+      <a href='{blog.url}'>{blog.url}</a>
+      <p>
+        <span>{blog.likes} likes </span>
+        <button onClick={handleIncreaseLike}>like</button>
+      </p>
+      <p>added by {blog.user.name}</p>
+    </div>
+  )
+}
+
 const App = () => {
   const dispatch = useDispatch()
   const loginUser = useSelector(state => state.userData.user)
@@ -86,14 +108,27 @@ const App = () => {
   }, [])
   console.log('initial_users: ', users)
 
+  const handleIncreaseLike = async () => {
+    console.log('adding likes',blog.title, blog.author)
+    try {
+      await dispatch(increadLike(blog))
+      dispatch(setNotification(`Likes of ${blog.title} are increased`, 5, 'fulfilled'))
+    }
+    catch (exception) {
+      dispatch(setNotification('fail to increase likes', 5, 'error'))
+    }}
 
-  const match = useMatch('/users/:id')
-  console.log('match: ', match)
+  const matchUserID = useMatch('/users/:id')
 
-  const user = match
-    ? users.find(u => u.id.toString() === match.params.id.toString())
+  const user = matchUserID
+    ? users.find(u => u.id.toString() === matchUserID.params.id.toString())
     : null
 
+  const matchBlogID = useMatch('/blogs/:id')
+
+  const blog = matchBlogID
+    ? blogs.find(b => b.id.toString() === matchBlogID.params.id.toString())
+    : null
 
   return (
     <div>
@@ -106,6 +141,7 @@ const App = () => {
         <Notification />
         <Routes>
           <Route path="/users/:id" element={<UserDetail user={user} />} />
+          <Route path="/blogs/:id" element={<BlogDetail blog={blog} handleIncreaseLike={handleIncreaseLike}/>} />
           <Route path="/" element={<BlogsPage />} />
           <Route path="/blogs" element={<BlogsPage />} />
           <Route path="/users" element={<UsersList />} />
