@@ -25,8 +25,6 @@ export default userSlice.reducer
 export const login = (username, password) => {
   console.log('logging in with: ', username, password)
   return async dispatch => {
-    //dispatch(setUsername(username))
-    //dispatch(setUsername(password))
 
     try {
       const user = await loginService.login({

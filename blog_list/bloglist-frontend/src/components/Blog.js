@@ -17,16 +17,6 @@ const Blog = ({ blog }) => {
   }
 
   const handleIncreaseLike = async () => {
-    /*
-    const newBlog = {
-      'user':blog.user.id,
-      'likes': blog.likes + 1,
-      'author':blog.author,
-      'title':blog.title,
-      'url':blog.url
-    }
-    await updateBlog(blog.id, newBlog)
-    */
     console.log('adding likes',blog.title, blog.author)
     try {
       await dispatch(increadLike(blog))

@@ -35,26 +35,6 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
   }
 
-  /*
-  const updateBlog = async (blogid, blogObject) => {
-    console.log('adding likes',blogObject.title, blogObject.author)
-    try {
-      const returnedBlog = await blogService.update(blogid,blogObject)
-
-      const succeedUpdateBlog = {
-        ...returnedBlog,
-        'user':user
-      }
-      const newBlogs = blogs.filter(blog => blog.id !== blogid).concat(succeedUpdateBlog)
-      const sortedBlog = await newBlogs.sort((a, b) => b.likes - a.likes)
-      setBlogs(sortedBlog)
-
-      dispatch(setNotification(`Likes of ${blogObject.title} are increased`, 5, 'fulfilled'))
-    } catch (exception) {
-      dispatch(setNotification('fail to increase likes', 5, 'error'))
-    }}
-    */
-
   return (
     <div>
       {user === null && <Notification />}
