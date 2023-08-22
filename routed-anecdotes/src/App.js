@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import {
-  BrowserRouter as Router,
   Routes, Route, Link, 
   useMatch, useNavigate
 } from 'react-router-dom'
-import { useField, useList } from './hooks'
+import { useField } from './hooks'
 
 const Menu = () => {
   const padding = {

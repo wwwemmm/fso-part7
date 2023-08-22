@@ -15,13 +15,6 @@ const BlogForm = () => {
 
   const addBlog = async  (event) => {
     event.preventDefault()
-    /*
-    const title = event.target.title.value
-    const author = event.target.author.value
-    const url = event.target.url.value
-    console.log('adding a new blog', title, author)
-    */
-
     try {
       await dispatch(createBlog(
         {
@@ -39,11 +32,6 @@ const BlogForm = () => {
       dispatch(setNotification('Missing title, author or url', 5, 'error'))
     }}
 
-  /*
-    const onChange = (event) => {
-    setValue(event.target.value)
-  }
-  */
   return (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
       <form onSubmit={addBlog}>
