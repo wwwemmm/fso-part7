@@ -49,7 +49,7 @@ export const createBlog = blog => {
       ...newBlog,
       user: blog.user
     }))
-    dispatch(initializeUsers())
+    await dispatch(initializeUsers())
   }
 }
 
@@ -58,7 +58,7 @@ export const removeBlog = blog => {
     console.log('blog in removeBlog: ', blog)
     await  blogService.deleteBlog(blog.id)
     dispatch(deleteBlog(blog))
-    dispatch(initializeUsers())
+    await dispatch(initializeUsers())
   }
 }
 
@@ -76,6 +76,6 @@ export const increadLike= blog => {
       user:blog.user
     }
     dispatch(updateBlog(succeedUpdateBlog))
-    dispatch(initializeUsers())
+    await dispatch(initializeUsers())
   }
 }

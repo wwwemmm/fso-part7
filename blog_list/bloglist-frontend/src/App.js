@@ -65,10 +65,13 @@ const UserDetail = ({ user }) => {
 }
 
 
-const BlogDetail = ({ blog, handleIncreaseLike }) => {
+const BlogDetail = ({ blog, handleIncreaseLike, handleDelete }) => {
+  const loginUser = useSelector(state => state.userData.user)
   if (!blog) {
     return null
   }
+  const showWhenIsCreator = blog.user.id.toString()===loginUser.id.toString() ? true : false
+  console.log('showWhenIsCreator ', showWhenIsCreator)
   return (
     <div>
       <h2>{blog.title} {blog.author}</h2>
@@ -77,7 +80,10 @@ const BlogDetail = ({ blog, handleIncreaseLike }) => {
         <span>{blog.likes} likes </span>
         <button onClick={handleIncreaseLike}>like</button>
       </p>
-      <p>added by {blog.user.name}</p>
+      <p>
+        <span>added by {blog.user.name} </span>
+        {showWhenIsCreator && <button onClick={handleDelete}>remove the blog</button>}
+      </p>
     </div>
   )
 }
@@ -118,6 +124,19 @@ const App = () => {
       dispatch(setNotification('fail to increase likes', 5, 'error'))
     }}
 
+  const handleDelete = async () => {
+    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
+      console.log('deleting blog',blog.title, blog.author)
+      try {
+        await dispatch(removeBlog(blog))
+        dispatch(setNotification(`${blog.title} is deleted`, 5, 'fulfilled'))
+      }catch (exception) {
+        console.log('exception: ', exception)
+        dispatch(setNotification(`fail to delete ${blog.title}`, 5, 'error'))
+      }
+    }
+  }
+
   const matchUserID = useMatch('/users/:id')
 
   const user = matchUserID
@@ -141,7 +160,7 @@ const App = () => {
         <Notification />
         <Routes>
           <Route path="/users/:id" element={<UserDetail user={user} />} />
-          <Route path="/blogs/:id" element={<BlogDetail blog={blog} handleIncreaseLike={handleIncreaseLike}/>} />
+          <Route path="/blogs/:id" element={<BlogDetail blog={blog} handleIncreaseLike={handleIncreaseLike} handleDelete={handleDelete}/>} />
           <Route path="/" element={<BlogsPage />} />
           <Route path="/blogs" element={<BlogsPage />} />
           <Route path="/users" element={<UsersList />} />
