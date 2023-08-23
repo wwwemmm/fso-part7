@@ -117,7 +117,7 @@ const BlogDetail = ({ blog, handleIncreaseLike, handleDelete }) => {
       </p>
       <p>
         <span>added by {blog.user.name} </span>
-        {showWhenIsCreator && <button onClick={handleDelete}>remove the blog</button>}
+        {showWhenIsCreator && <Button variant="danger" size="sm" onClick={handleDelete}>remove the blog</Button>}
       </p>
       <h3>comments</h3>
       <Form onSubmit={handleCreateComment}>
@@ -128,7 +128,7 @@ const BlogDetail = ({ blog, handleIncreaseLike, handleDelete }) => {
             onChange={(e) => {dispatch(setComment(e.target.value))}}
             style={{ marginRight: '10px' }}
           />
-          <Button variant="primary" type="submit">add comment</Button>
+          <Button variant="primary" type="submit" size="sm">add comment</Button>
         </Form.Group>
       </Form>
       <Table striped>
